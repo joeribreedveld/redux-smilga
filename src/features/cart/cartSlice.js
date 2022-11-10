@@ -17,11 +17,15 @@ const cartSlice = createSlice({
     clearCart: (state) => {
       state.cartItems = [];
     },
+    removeItem: (state, action) => {
+      const itemId = action.payload;
+      state.cartItems = state.cartItems.filter((item) => item.id !== itemId);
+    },
   },
 });
 
 // Export the actions generated from the slice
-export const { clearCart } = cartSlice.actions;
+export const { clearCart, removeItem } = cartSlice.actions;
 
 // console.log(cartSlice);
 
