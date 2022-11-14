@@ -14,8 +14,8 @@ const Modal = () => {
             type="button"
             className="btn confirm-btn"
             onClick={() => {
-              dispatch(clearCart());
-              dispatch(closeModal());
+              dispatch(clearCart()); // clear cart
+              dispatch(closeModal()); // close modal
             }}
           >
             confirm
@@ -23,7 +23,7 @@ const Modal = () => {
           <button
             type="button"
             className="btn clear-btn"
-            onClick={() => dispatch(closeModal())}
+            onClick={() => dispatch(closeModal())} // close modal
           >
             cancel
           </button>

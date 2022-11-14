@@ -1,13 +1,30 @@
-import { createSlice } from "@reduxjs/toolkit";
-import cartItems from "../../cartItems";
+import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import axios from "axios";
+
+// Url to fetch cart items from
+const url = "https://course-api.com/react-useReducer-cart-project";
 
 // Define a type for the slice state
 const initialState = {
-  cartItems: cartItems,
+  cartItems: [],
   amount: 4,
   total: 0,
   isLoading: true,
 };
+
+// Create an async thunk to fetch cart items
+export const getCardItems = createAsyncThunk(
+  "cart/getCardItems",
+  async (name, thunkAPI) => {
+    try {
+      console.log(thunkAPI.getState());
+      const response = await axios(url);
+      return response.data;
+    } catch (error) {
+      return thunkAPI.rejectWithValue(error.response.data);
+    }
+  }
+);
 
 // Create a Redux slice of state for the cart
 const cartSlice = createSlice({
@@ -50,6 +67,24 @@ const cartSlice = createSlice({
       // Update the state with the new totals
       state.amount = amount;
       state.total = total;
+    },
+  },
+  extraReducers: {
+    // Handle the pending state of the getCardItems async thunk
+    [getCardItems.pending]: (state) => {
+      state.isLoading = true;
+    },
+
+    // Handle the fulfilled state of the getCardItems async thunk
+    [getCardItems.fulfilled]: (state, action) => {
+      console.log(action.payload);
+      state.isLoading = false;
+      state.cartItems = action.payload;
+    },
+
+    // Handle the rejected state of the getCardItems async thunk
+    [getCardItems.rejected]: (state, action) => {
+      state.isLoading = false;
     },
   },
 });
